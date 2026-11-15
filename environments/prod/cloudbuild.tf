@@ -30,7 +30,7 @@ resource "google_cloudbuild_trigger" "terraform_apply" {
   description = "Apply approved Terraform changes after merge to main"
 
   # Disabled until deployment permissions and branch protection are ready.
-  disabled = true
+  disabled = false
 
   repository_event_config {
     repository = google_cloudbuildv2_repository.infrastructure.id
