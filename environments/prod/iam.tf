@@ -71,3 +71,57 @@ resource "google_storage_bucket_iam_member" "terraform_plan_bucket_policy_reader
 
   member = "serviceAccount:${google_service_account.terraform_plan.email}"
 }
+
+locals {
+  terraform_apply_roles = toset([
+    "roles/serviceusage.serviceUsageAdmin",
+    "roles/resourcemanager.projectIamAdmin",
+    "roles/iam.serviceAccountAdmin",
+    "roles/iam.roleAdmin",
+    "roles/cloudbuild.admin",
+    "roles/viewer"
+  ])
+}
+
+resource "google_project_iam_member" "terraform_apply_roles" {
+  for_each = local.terraform_apply_roles
+
+  project = var.project_id
+  role    = each.value
+
+  member = "serviceAccount:${google_service_account.terraform_pipeline.email}"
+}
+
+resource "google_service_account_iam_member" "terraform_apply_act_as_plan" {
+  service_account_id = google_service_account.terraform_plan.name
+  role               = "roles/iam.serviceAccountUser"
+
+  member = "serviceAccount:${google_service_account.terraform_pipeline.email}"
+}
+
+resource "google_service_account_iam_member" "terraform_apply_act_as_pipeline" {
+  service_account_id = google_service_account.terraform_pipeline.name
+  role               = "roles/iam.serviceAccountUser"
+
+  member = "serviceAccount:${google_service_account.terraform_pipeline.email}"
+}
+
+resource "google_project_iam_custom_role" "terraform_bucket_policy_admin" {
+  project     = var.project_id
+  role_id     = "terraformBucketPolicyAdmin"
+  title       = "Terraform Bucket Policy Admin"
+  description = "Manage IAM policy of the Terraform State bucket"
+
+  permissions = [
+    "storage.buckets.getIamPolicy",
+    "storage.buckets.setIamPolicy"
+  ]
+}
+
+resource "google_storage_bucket_iam_member" "terraform_apply_bucket_policy_admin" {
+  bucket = "nbp-devops-prod-tfstate"
+
+  role = google_project_iam_custom_role.terraform_bucket_policy_admin.name
+
+  member = "serviceAccount:${google_service_account.terraform_pipeline.email}"
+}
