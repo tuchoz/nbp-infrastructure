@@ -80,6 +80,7 @@ locals {
     "roles/iam.serviceAccountAdmin",
     "roles/iam.roleAdmin",
     "roles/cloudbuild.admin",
+    "roles/container.admin",
     "roles/viewer"
   ])
 }
