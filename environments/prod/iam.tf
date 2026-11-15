@@ -74,6 +74,7 @@ resource "google_storage_bucket_iam_member" "terraform_plan_bucket_policy_reader
 
 locals {
   terraform_apply_roles = toset([
+    "roles/artifactregistry.admin",
     "roles/serviceusage.serviceUsageAdmin",
     "roles/resourcemanager.projectIamAdmin",
     "roles/iam.serviceAccountAdmin",
