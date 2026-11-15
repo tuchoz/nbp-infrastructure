@@ -52,3 +52,22 @@ resource "google_project_iam_member" "terraform_plan_logging" {
 
   member = "serviceAccount:${google_service_account.terraform_plan.email}"
 }
+
+resource "google_project_iam_custom_role" "terraform_bucket_policy_reader" {
+  project     = var.project_id
+  role_id     = "terraformBucketPolicyReader"
+  title       = "Terraform Bucket Policy Reader"
+  description = "Read bucket IAM policies during Terraform plan"
+
+  permissions = [
+    "storage.buckets.getIamPolicy"
+  ]
+}
+
+resource "google_storage_bucket_iam_member" "terraform_plan_bucket_policy_reader" {
+  bucket = "nbp-devops-prod-tfstate"
+
+  role = google_project_iam_custom_role.terraform_bucket_policy_reader.name
+
+  member = "serviceAccount:${google_service_account.terraform_plan.email}"
+}
