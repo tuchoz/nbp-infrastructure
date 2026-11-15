@@ -6,7 +6,7 @@ resource "google_cloudbuild_trigger" "terraform_plan" {
   description = "Terraform validation and plan for infrastructure pull requests"
 
   # Disabled until IAM and security configuration is complete.
-  disabled = true
+  disabled = false
 
   repository_event_config {
     repository = google_cloudbuildv2_repository.infrastructure.id
