@@ -43,6 +43,10 @@ resource "google_cloudbuild_trigger" "app_ci" {
   service_account = google_service_account.app_ci.id
   filename        = "cloudbuild/ci.yaml"
 
+  depends_on = [
+    google_service_account_iam_member.terraform_pipeline_app_ci_user
+  ]
+
   repository_event_config {
     repository = google_cloudbuildv2_repository.app.id
 
@@ -62,6 +66,10 @@ resource "google_cloudbuild_trigger" "app_build" {
   service_account = google_service_account.app_builder.id
   filename        = "cloudbuild/build.yaml"
 
+  depends_on = [
+    google_service_account_iam_member.terraform_pipeline_app_builder_user
+  ]
+
   repository_event_config {
     repository = google_cloudbuildv2_repository.app.id
 
@@ -73,4 +81,13 @@ resource "google_cloudbuild_trigger" "app_build" {
   substitutions = {
     _ALLOW_TRIVY_FAILURE = "false"
   }
+}
+
+# Terraform pipeline can assign the app builder identity
+# to the application build trigger.
+
+resource "google_service_account_iam_member" "terraform_pipeline_app_builder_user" {
+  service_account_id = google_service_account.app_builder.name
+  role               = "roles/iam.serviceAccountUser"
+  member             = "serviceAccount:terraform-pipeline@nbp-devops-prod.iam.gserviceaccount.com"
 }
