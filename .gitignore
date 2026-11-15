@@ -1,0 +1,36 @@
+# Terraform providers and cache
+**/.terraform/
+.terraform/
+
+# Terraform state
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+
+# Terraform plans
+*.tfplan
+tfplan
+
+# Local variables
+*.tfvars
+*.tfvars.json
+!*.tfvars.example
+
+# Terraform crash logs
+crash.log
+crash.*.log
+
+# Overrides
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Credentials
+*.pem
+*.key
+application_default_credentials.json
+
+# IDE
+.vscode/
+.idea/
