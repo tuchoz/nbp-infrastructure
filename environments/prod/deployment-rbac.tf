@@ -89,7 +89,7 @@ resource "kubernetes_role_v1" "nbp_deployer" {
   # Allow Helm CD to manage namespaced Let's Encrypt Issuers.
   rule {
     api_groups = ["cert-manager.io"]
-    resources  = ["issuers"]
+    resources  = ["issuers", "certificates"]
     verbs = [
       "get",
       "list",
