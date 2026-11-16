@@ -10,11 +10,14 @@ resource "helm_release" "cert_manager" {
   chart      = "cert-manager"
   version    = "v1.19.6"
 
-  # Install cert-manager CustomResourceDefinitions.
   set = [
     {
       name  = "crds.enabled"
       value = "true"
+    },
+    {
+      name  = "global.leaderElection.namespace"
+      value = "cert-manager"
     }
   ]
 
