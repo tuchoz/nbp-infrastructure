@@ -86,10 +86,30 @@ resource "kubernetes_role_v1" "nbp_deployer" {
     ]
   }
 
-  # Allow Helm CD to manage namespaced Let's Encrypt Issuers.
+  # Allow Helm CD to manage namespaced Let's Encrypt
+  # Issuers and Certificates.
   rule {
     api_groups = ["cert-manager.io"]
-    resources  = ["issuers", "certificates"]
+    resources = [
+      "issuers",
+      "certificates"
+    ]
+    verbs = [
+      "get",
+      "list",
+      "watch",
+      "create",
+      "update",
+      "patch",
+      "delete"
+    ]
+  }
+
+  # Allow Helm CD to manage GKE FrontendConfig
+  # for HTTP to HTTPS redirects in nbp-prod.
+  rule {
+    api_groups = ["networking.gke.io"]
+    resources  = ["frontendconfigs"]
     verbs = [
       "get",
       "list",
