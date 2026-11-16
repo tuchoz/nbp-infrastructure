@@ -17,7 +17,7 @@ resource "google_project_iam_member" "nbp_deployer_logging" {
 # Required for Kubernetes application deployment.
 resource "google_project_iam_member" "nbp_deployer_gke" {
   project = var.project_id
-  role    = "roles/container.developer"
+  role    = "roles/container.clusterViewer"
 
   member = "serviceAccount:${google_service_account.nbp_deployer.email}"
 }
