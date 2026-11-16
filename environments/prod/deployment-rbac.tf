@@ -49,6 +49,13 @@ resource "kubernetes_role_v1" "nbp_deployer" {
     ]
   }
 
+  # Helm needs to inspect ReplicaSets during deployment.
+  rule {
+    api_groups = ["apps"]
+    resources  = ["replicasets"]
+    verbs      = ["get", "list", "watch"]
+  }
+
   # GKE Ingress.
   rule {
     api_groups = ["networking.k8s.io"]
