@@ -120,6 +120,22 @@ resource "kubernetes_role_v1" "nbp_deployer" {
       "delete"
     ]
   }
+
+  # Allow Helm CD to manage GKE BackendConfig
+  # for Spring Boot load balancer health checks.
+  rule {
+    api_groups = ["cloud.google.com"]
+    resources  = ["backendconfigs"]
+    verbs = [
+      "get",
+      "list",
+      "watch",
+      "create",
+      "update",
+      "patch",
+      "delete"
+    ]
+  }
 }
 
 resource "kubernetes_role_binding_v1" "nbp_deployer" {
